@@ -260,4 +260,76 @@ variable "k8s_max_unavailable" {
   description = "Maximum number of unavailable nodes during upgrade"
   type        = number
   default     = 1
+}
+
+variable "security_group_description" {
+  description = "Description for the security group"
+  type        = string
+  default     = "Security group for Kubernetes cluster"
+}
+
+variable "security_group_ingress_rules" {
+  description = "List of ingress rules for the security group"
+  type = list(object({
+    type              = string
+    ip_protocol       = string
+    nic_type          = string
+    policy            = string
+    port_range        = string
+    priority          = number
+    cidr_ip           = string
+  }))
+  default = [
+    {
+      type              = "ingress"
+      ip_protocol       = "all"
+      nic_type          = "intranet"
+      policy            = "accept"
+      port_range        = "-1/-1"
+      priority          = 1
+      cidr_ip           = "10.0.0.0/16"  # Will be replaced with vpc_cidr
+    },
+    {
+      type              = "ingress"
+      ip_protocol       = "tcp"
+      nic_type          = "internet"
+      policy            = "accept"
+      port_range        = "22/22"
+      priority          = 2
+      cidr_ip           = "0.0.0.0/0"
+    },
+    {
+      type              = "ingress"
+      ip_protocol       = "tcp"
+      nic_type          = "internet"
+      policy            = "accept"
+      port_range        = "6443/6443"
+      priority          = 3
+      cidr_ip           = "0.0.0.0/0"
+    }
+  ]
+}
+
+variable "security_group_egress_rules" {
+  description = "List of egress rules for the security group"
+  type = list(object({
+    type              = string
+    ip_protocol       = string
+    nic_type          = string
+    policy            = string
+    port_range        = string
+    priority          = number
+    cidr_ip           = string
+  }))
+  default = [
+    {
+      type              = "egress"
+      ip_protocol       = "all"
+      nic_type          = "internet"
+      policy            = "accept"
+      port_range        = "-1/-1"
+      priority          = 1
+      cidr_ip           = "0.0.0.0/0"
+    }
+  ]
 } 

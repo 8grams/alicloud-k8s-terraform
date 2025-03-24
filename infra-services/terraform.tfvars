@@ -29,3 +29,47 @@ tags = {
   Terraform   = "true"
   Project     = "k8s-cluster"
 }
+
+security_group_description = "Security group for Kubernetes cluster"
+
+security_group_ingress_rules = [
+  {
+    type              = "ingress"
+    ip_protocol       = "all"
+    nic_type          = "intranet"
+    policy            = "accept"
+    port_range        = "-1/-1"
+    priority          = 1
+    cidr_ip           = "10.0.0.0/16"  # Will be replaced with vpc_cidr
+  },
+  {
+    type              = "ingress"
+    ip_protocol       = "tcp"
+    nic_type          = "internet"
+    policy            = "accept"
+    port_range        = "22/22"
+    priority          = 2
+    cidr_ip           = "0.0.0.0/0"
+  },
+  {
+    type              = "ingress"
+    ip_protocol       = "tcp"
+    nic_type          = "internet"
+    policy            = "accept"
+    port_range        = "6443/6443"
+    priority          = 3
+    cidr_ip           = "0.0.0.0/0"
+  }
+]
+
+security_group_egress_rules = [
+  {
+    type              = "egress"
+    ip_protocol       = "all"
+    nic_type          = "internet"
+    policy            = "accept"
+    port_range        = "-1/-1"
+    priority          = 1
+    cidr_ip           = "0.0.0.0/0"
+  }
+]

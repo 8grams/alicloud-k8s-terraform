@@ -17,7 +17,12 @@ module "security_group" {
   name_prefix = var.name_prefix
   vpc_id      = module.vpc.vpc_id
   vpc_cidr    = module.vpc.vpc_cidr
-  tags        = var.tags
+  
+  security_group_description = var.security_group_description
+  ingress_rules            = var.security_group_ingress_rules
+  egress_rules             = var.security_group_egress_rules
+  
+  tags = var.tags
 }
 
 module "ram" {
