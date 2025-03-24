@@ -9,6 +9,11 @@ variable "vswitch_ids" {
   type        = list(string)
 }
 
+variable "security_group_ids" {
+  description = "List of security group IDs to associate with the RDS instance"
+  type        = list(string)
+}
+
 variable "engine_version" {
   description = "MySQL engine version"
   type        = string

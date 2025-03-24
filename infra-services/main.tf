@@ -11,16 +11,30 @@ module "vpc" {
   tags                  = var.tags
 }
 
-module "security_group" {
+module "kubernetes_security_group" {
   source = "../modules/security-group"
 
   name_prefix = var.name_prefix
   vpc_id      = module.vpc.vpc_id
   vpc_cidr    = module.vpc.vpc_cidr
   
-  security_group_description = var.security_group_description
-  ingress_rules            = var.security_group_ingress_rules
-  egress_rules             = var.security_group_egress_rules
+  security_group_description  = var.kubernetes_security_group_description
+  ingress_rules               = var.kubernetes_security_group_ingress_rules
+  egress_rules                = var.kubernetes_security_group_egress_rules
+  
+  tags = var.tags
+}
+
+module "db_security_group" {
+  source = "../modules/security-group"
+
+  name_prefix = "${var.name_prefix}-db"
+  vpc_id      = module.vpc.vpc_id
+  vpc_cidr    = module.vpc.vpc_cidr
+  
+  security_group_description = var.db_security_group_description
+  ingress_rules            = var.db_security_group_ingress_rules
+  egress_rules             = var.db_security_group_egress_rules
   
   tags = var.tags
 }
@@ -42,6 +56,7 @@ module "database" {
 
   name_prefix               = var.name_prefix
   vswitch_ids               = module.vpc.private_vswitch_ids
+  security_group_ids        = [module.db_security_group.security_group_id]
   engine_version            = var.db_engine_version
   instance_type             = var.db_instance_type
   instance_storage          = var.db_instance_storage
@@ -63,7 +78,7 @@ module "kubernetes" {
   k8s_version        = var.k8s_version
   vswitch_ids        = module.vpc.private_vswitch_ids
   pod_vswitch_ids    = module.vpc.private_vswitch_ids
-  security_group_id  = module.security_group.security_group_id
+  security_group_id  = module.kubernetes_security_group.security_group_id
   
   # Worker node configuration
   worker_instance_type = var.worker_instance_type

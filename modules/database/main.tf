@@ -8,6 +8,7 @@ resource "alicloud_db_instance" "mysql" {
   instance_name        = "${var.name_prefix}-mysql"
   vswitch_id           = var.vswitch_ids[0]
   security_ips         = var.security_ips
+  security_group_ids   = var.security_group_ids
 
   zone_id = var.vswitch_ids[0]
 

@@ -262,14 +262,14 @@ variable "k8s_max_unavailable" {
   default     = 1
 }
 
-variable "security_group_description" {
-  description = "Description for the security group"
+variable "kubernetes_security_group_description" {
+  description = "Description for the Kubernetes security group"
   type        = string
   default     = "Security group for Kubernetes cluster"
 }
 
-variable "security_group_ingress_rules" {
-  description = "List of ingress rules for the security group"
+variable "kubernetes_security_group_ingress_rules" {
+  description = "List of ingress rules for the Kubernetes security group"
   type = list(object({
     type              = string
     ip_protocol       = string
@@ -310,8 +310,8 @@ variable "security_group_ingress_rules" {
   ]
 }
 
-variable "security_group_egress_rules" {
-  description = "List of egress rules for the security group"
+variable "kubernetes_security_group_egress_rules" {
+  description = "List of egress rules for the Kubernetes security group"
   type = list(object({
     type              = string
     ip_protocol       = string
@@ -368,4 +368,48 @@ variable "ram_policies" {
       policy_type = "System"
     }
   ]
+}
+
+variable "db_security_group_description" {
+  description = "Description for the database security group"
+  type        = string
+  default     = "Security group for RDS instance"
+}
+
+variable "db_security_group_ingress_rules" {
+  description = "List of ingress rules for the database security group"
+  type = list(object({
+    type              = string
+    ip_protocol       = string
+    nic_type          = string
+    policy            = string
+    port_range        = string
+    priority          = number
+    cidr_ip           = string
+  }))
+  default = [
+    {
+      type              = "ingress"
+      ip_protocol       = "tcp"
+      nic_type          = "intranet"
+      policy            = "accept"
+      port_range        = "3306/3306"
+      priority          = 1
+      cidr_ip           = "10.0.0.0/16"  # Will be replaced with vpc_cidr
+    }
+  ]
+}
+
+variable "db_security_group_egress_rules" {
+  description = "List of egress rules for the database security group"
+  type = list(object({
+    type              = string
+    ip_protocol       = string
+    nic_type          = string
+    policy            = string
+    port_range        = string
+    priority          = number
+    cidr_ip           = string
+  }))
+  default = []
 } 

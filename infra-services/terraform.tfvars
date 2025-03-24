@@ -20,6 +20,23 @@ db_backup_period = ["Monday", "Wednesday", "Friday"]
 db_security_ips = ["0.0.0.0/0"]  # Allow access from anywhere, modify as needed
 db_instance_charge_type = "Postpaid"
 
+# Database Security Group Configuration
+db_security_group_description = "Security group for RDS instance"
+
+db_security_group_ingress_rules = [
+  {
+    type              = "ingress"
+    ip_protocol       = "tcp"
+    nic_type          = "intranet"
+    policy            = "accept"
+    port_range        = "3306/3306"
+    priority          = 1
+    cidr_ip           = "10.0.0.0/16"  # Will be replaced with vpc_cidr
+  }
+]
+
+db_security_group_egress_rules = []
+
 # Kubernetes Configuration
 k8s_version = "1.24.6"
 worker_instance_type = "ecs.g6.xlarge"
@@ -53,39 +70,19 @@ tags = {
   Project     = "k8s-cluster"
 }
 
-security_group_description = "Security group for Kubernetes cluster"
+kubernetes_security_group_description = "Security group for Kubernetes cluster"
 
-security_group_ingress_rules = [
+kubernetes_security_group_ingress_rules = [
   {
     type              = "ingress"
     ip_protocol       = "all"
     nic_type          = "intranet"
     policy            = "accept"
-    port_range        = "-1/-1"
-    priority          = 1
-    cidr_ip           = "10.0.0.0/16"  # Will be replaced with vpc_cidr
-  },
-  {
-    type              = "ingress"
-    ip_protocol       = "tcp"
-    nic_type          = "internet"
-    policy            = "accept"
-    port_range        = "22/22"
-    priority          = 2
-    cidr_ip           = "0.0.0.0/0"
-  },
-  {
-    type              = "ingress"
-    ip_protocol       = "tcp"
-    nic_type          = "internet"
-    policy            = "accept"
-    port_range        = "6443/6443"
-    priority          = 3
-    cidr_ip           = "0.0.0.0/0"
+    port_range        = "10.0.0.0/16"  # Will be replaced with vpc_cidr
   }
 ]
 
-security_group_egress_rules = [
+kubernetes_security_group_egress_rules = [
   {
     type              = "egress"
     ip_protocol       = "all"
