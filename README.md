@@ -1,1 +1,1 @@
-# CSP Pintar on Alicloud
+# alicloud-k8s-terraform
