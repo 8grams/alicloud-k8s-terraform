@@ -63,6 +63,11 @@ k8s_auto_upgrade = true
 k8s_surge = 1
 k8s_max_unavailable = 1
 
+# Kubernetes Addon Versions
+k8s_ingress_nginx_version = "v1.8.0"
+k8s_csi_version = "v1.24.6"
+k8s_metrics_server_version = "v0.6.4"
+
 # Common Tags
 tags = {
   Environment = "production"
@@ -93,6 +98,20 @@ kubernetes_security_group_egress_rules = [
     cidr_ip           = "0.0.0.0/0"
   }
 ]
+
+# Kubernetes Tags
+k8s_tags = {
+  Environment = "production"
+  ManagedBy   = "terraform"
+}
+
+# Kubernetes Addon Configuration
+k8s_disable_cloud_monitor     = false  # Keep enabled for monitoring
+k8s_disable_csi_plugin       = false  # Keep enabled for storage
+k8s_disable_ingress_nginx    = false  # Keep enabled for ingress
+k8s_disable_logtail_ds       = false  # Keep enabled for logging
+k8s_disable_metrics_server   = false  # Keep enabled for HPA
+k8s_disable_arms_prometheus  = false  # Keep enabled for monitoring
 
 # RAM Configuration
 ram_user_name = "k8s-admin"

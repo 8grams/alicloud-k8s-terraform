@@ -27,6 +27,38 @@ resource "alicloud_cs_managed_kubernetes" "cluster" {
   # Terway network plugin configuration
   cluster_network_type = "terway-eni"
   
+  # Addons configuration
+  addons {
+    name     = "cloud-monitor"
+    disabled = var.disable_cloud_monitor
+    config   = jsonencode({})
+  }
+  addons {
+    name     = "csi-plugin"
+    disabled = var.disable_csi_plugin
+    config   = jsonencode({})
+  }
+  addons {
+    name     = "nginx-ingress-controller"
+    disabled = var.disable_ingress_nginx
+    config   = jsonencode({})
+  }
+  addons {
+    name     = "logtail-ds"
+    disabled = var.disable_logtail_ds
+    config   = jsonencode({})
+  }
+  addons {
+    name     = "metrics-server"
+    disabled = var.disable_metrics_server
+    config   = jsonencode({})
+  }
+  addons {
+    name     = "arms-prometheus"
+    disabled = var.disable_arms_prometheus
+    config   = jsonencode({})
+  }
+  
   # Tags
   tags = var.tags
 } 
@@ -57,4 +89,58 @@ resource "alicloud_cs_kubernetes_node_pool" "default" {
     max_unavailable = var.max_unavailable
   }
   tags = var.tags
+}
+
+# Kubernetes Addons
+# https://registry.terraform.io/providers/aliyun/alicloud/latest/docs/resources/cs_kubernetes_addon
+resource "alicloud_cs_kubernetes_addon" "ingress_nginx" {
+  cluster_id = alicloud_cs_managed_kubernetes.cluster.id
+  name       = "nginx-ingress-controller"
+  version    = var.ingress_nginx_version
+  config     = jsonencode({
+    IngressSlbNetworkType = "internet"
+    IngressSlbSpec        = "slb.s2.small"
+  })
+}
+
+resource "alicloud_cs_kubernetes_addon" "csi" {
+  cluster_id = alicloud_cs_managed_kubernetes.cluster.id
+  name       = "csi-plugin"
+  version    = var.csi_version
+  config     = jsonencode({})
+}
+
+resource "alicloud_cs_kubernetes_addon" "metrics_server" {
+  cluster_id = alicloud_cs_managed_kubernetes.cluster.id
+  name       = "metrics-server"
+  version    = var.metrics_server_version
+  config     = jsonencode({})
+}
+
+# Monitoring Configuration
+resource "alicloud_cs_kubernetes_addon" "prometheus" {
+  cluster_id = alicloud_cs_managed_kubernetes.cluster.id
+  name       = "arms-prometheus"
+  version    = "v0.5.1"  # Use latest stable version
+  config     = jsonencode({
+    enabled = "true"
+  })
+}
+
+resource "alicloud_cs_kubernetes_addon" "arms" {
+  cluster_id = alicloud_cs_managed_kubernetes.cluster.id
+  name       = "arms-agent"
+  version    = "v0.1.2"  # Use latest stable version
+  config     = jsonencode({
+    enabled = "true"
+  })
+}
+
+resource "alicloud_cs_kubernetes_addon" "log_service" {
+  cluster_id = alicloud_cs_managed_kubernetes.cluster.id
+  name       = "logtail-ds"
+  version    = "v1.0.30"  # Use latest stable version
+  config     = jsonencode({
+    IngressDashboardEnabled = "true"
+  })
 } 

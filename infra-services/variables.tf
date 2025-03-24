@@ -412,4 +412,64 @@ variable "db_security_group_egress_rules" {
     cidr_ip           = string
   }))
   default = []
+}
+
+variable "k8s_tags" {
+  description = "Tags to be applied to all Kubernetes resources"
+  type        = map(string)
+  default     = {}
+}
+
+variable "k8s_disable_cloud_monitor" {
+  description = "Whether to disable cloud-monitor addon"
+  type        = bool
+  default     = false
+}
+
+variable "k8s_disable_csi_plugin" {
+  description = "Whether to disable csi-plugin addon"
+  type        = bool
+  default     = false
+}
+
+variable "k8s_disable_ingress_nginx" {
+  description = "Whether to disable nginx-ingress-controller addon"
+  type        = bool
+  default     = false
+}
+
+variable "k8s_disable_logtail_ds" {
+  description = "Whether to disable logtail-ds addon"
+  type        = bool
+  default     = false
+}
+
+variable "k8s_disable_metrics_server" {
+  description = "Whether to disable metrics-server addon"
+  type        = bool
+  default     = false
+}
+
+variable "k8s_disable_arms_prometheus" {
+  description = "Whether to disable arms-prometheus addon"
+  type        = bool
+  default     = false
+}
+
+variable "k8s_ingress_nginx_version" {
+  description = "Version of ingress-nginx addon"
+  type        = string
+  default     = "v1.8.0"
+}
+
+variable "k8s_csi_version" {
+  description = "Version of CSI addon"
+  type        = string
+  default     = "v1.24.6"  # Should match k8s version
+}
+
+variable "k8s_metrics_server_version" {
+  description = "Version of metrics-server addon"
+  type        = string
+  default     = "v0.6.4"
 } 

@@ -173,4 +173,58 @@ variable "tags" {
   description = "Tags to be applied to all resources"
   type        = map(string)
   default     = {}
+}
+
+variable "disable_cloud_monitor" {
+  description = "Whether to disable cloud-monitor addon"
+  type        = bool
+  default     = false
+}
+
+variable "disable_csi_plugin" {
+  description = "Whether to disable csi-plugin addon"
+  type        = bool
+  default     = false
+}
+
+variable "disable_ingress_nginx" {
+  description = "Whether to disable nginx-ingress-controller addon"
+  type        = bool
+  default     = false
+}
+
+variable "disable_logtail_ds" {
+  description = "Whether to disable logtail-ds addon"
+  type        = bool
+  default     = false
+}
+
+variable "disable_metrics_server" {
+  description = "Whether to disable metrics-server addon"
+  type        = bool
+  default     = false
+}
+
+variable "disable_arms_prometheus" {
+  description = "Whether to disable arms-prometheus addon"
+  type        = bool
+  default     = false
+}
+
+variable "ingress_nginx_version" {
+  description = "Version of ingress-nginx addon"
+  type        = string
+  default     = "v1.8.0"
+}
+
+variable "csi_version" {
+  description = "Version of CSI addon"
+  type        = string
+  default     = "v1.24.6"  # Should match k8s version
+}
+
+variable "metrics_server_version" {
+  description = "Version of metrics-server addon"
+  type        = string
+  default     = "v0.6.4"
 } 

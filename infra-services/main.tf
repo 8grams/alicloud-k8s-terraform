@@ -45,10 +45,10 @@ module "ram" {
   name_prefix = var.name_prefix
   tags        = var.tags
   
-  ram_user_name        = var.ram_user_name
+  ram_user_name         = var.ram_user_name
   ram_user_display_name = var.ram_user_display_name
-  ram_user_force       = var.ram_user_force
-  ram_policies         = var.ram_policies
+  ram_user_force        = var.ram_user_force
+  ram_policies          = var.ram_policies
 }
 
 module "database" {
@@ -73,47 +73,45 @@ module "database" {
 module "kubernetes" {
   source = "../modules/kubernetes"
 
-  name_prefix        = var.name_prefix
-  cluster_id         = module.kubernetes.cluster_id
-  k8s_version        = var.k8s_version
-  vswitch_ids        = module.vpc.private_vswitch_ids
-  pod_vswitch_ids    = module.vpc.private_vswitch_ids
-  security_group_id  = module.kubernetes_security_group.security_group_id
-  
-  # Worker node configuration
-  worker_instance_type = var.worker_instance_type
-  worker_nodes_count   = var.worker_nodes_count
-  worker_disk_size     = var.k8s_worker_disk_size
-  worker_disk_category = var.k8s_worker_disk_category
-  
-  # Network configuration
-  pod_cidr     = var.pod_cidr
-  service_cidr = var.service_cidr
-  
+  name_prefix           = var.name_prefix
+  k8s_version           = var.k8s_version
+  vswitch_ids           = module.vpc.vswitch_ids
+  pod_vswitch_ids       = module.vpc.pod_vswitch_ids
+  security_group_id     = module.kubernetes_security_group.security_group_id
+  worker_instance_type  = var.worker_instance_type
+  worker_nodes_count    = var.worker_nodes_count
+  worker_disk_category  = var.k8s_worker_disk_category
+  worker_disk_size      = var.k8s_worker_disk_size
+  pod_cidr              = var.pod_cidr
+  service_cidr          = var.service_cidr
+
   # Node pool configuration
-  instance_types       = var.k8s_instance_types
-  desired_size         = var.k8s_desired_size
-  min_size             = var.k8s_min_size
-  max_size             = var.k8s_max_size
-  system_disk_category = var.k8s_system_disk_category
-  system_disk_size     = var.k8s_system_disk_size
-  
-  # Node access configuration
-  key_name  = var.k8s_key_name
-  image_id  = var.k8s_image_id
-  password  = var.k8s_password
-  
-  # EIP configuration
-  is_bond_eip              = var.k8s_is_bond_eip
-  eip_internet_charge_type = var.k8s_eip_internet_charge_type
-  eip_bandwidth            = var.k8s_eip_bandwidth
-  
-  # Node pool management
-  install_cloud_monitor = var.k8s_install_cloud_monitor
-  auto_repair           = var.k8s_auto_repair
-  auto_upgrade          = var.k8s_auto_upgrade
-  surge                 = var.k8s_surge
-  max_unavailable       = var.k8s_max_unavailable
-  
-  tags = var.tags
+  cluster_id              = module.kubernetes.cluster_id
+  instance_types          = var.k8s_instance_types
+  desired_size            = var.k8s_desired_size
+  system_disk_category    = var.k8s_system_disk_category
+  system_disk_size        = var.k8s_system_disk_size
+  key_name                = var.k8s_key_name
+  image_id                = var.k8s_image_id
+  password                = var.k8s_password
+  install_cloud_monitor   = var.k8s_install_cloud_monitor
+  min_size                = var.k8s_min_size
+  max_size                = var.k8s_max_size
+  auto_repair             = var.k8s_auto_repair
+  auto_upgrade            = var.k8s_auto_upgrade
+  surge                   = var.k8s_surge
+  max_unavailable         = var.k8s_max_unavailable
+
+  # Addon configuration
+  disable_cloud_monitor   = var.k8s_disable_cloud_monitor
+  disable_csi_plugin      = var.k8s_disable_csi_plugin
+  disable_ingress_nginx   = var.k8s_disable_ingress_nginx
+  disable_logtail_ds      = var.k8s_disable_logtail_ds
+  disable_metrics_server  = var.k8s_disable_metrics_server
+  disable_arms_prometheus = var.k8s_disable_arms_prometheus
+  ingress_nginx_version   = var.k8s_ingress_nginx_version
+  csi_version             = var.k8s_csi_version
+  metrics_server_version  = var.k8s_metrics_server_version
+
+  tags = var.k8s_tags
 } 
