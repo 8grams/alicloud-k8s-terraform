@@ -127,24 +127,6 @@ variable "max_size" {
   default     = 10
 }
 
-variable "is_bond_eip" {
-  description = "Whether to bind EIP to the nodes"
-  type        = bool
-  default     = false
-}
-
-variable "eip_internet_charge_type" {
-  description = "Internet charge type for EIP"
-  type        = string
-  default     = "PayByBandwidth"
-}
-
-variable "eip_bandwidth" {
-  description = "Bandwidth for EIP"
-  type        = number
-  default     = 5
-}
-
 variable "auto_repair" {
   description = "Whether to enable auto repair"
   type        = bool
