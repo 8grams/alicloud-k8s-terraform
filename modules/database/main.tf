@@ -1,16 +1,29 @@
-# MySQL RDS Instance
+# https://registry.terraform.io/providers/aliyun/alicloud/latest/docs/resources/db_instance
 resource "alicloud_db_instance" "mysql" {
   engine               = "MySQL"
-  engine_version       = "8.0"
-  instance_type        = var.db_instance_type
-  instance_storage     = var.db_instance_storage
-  instance_charge_type = "Postpaid"
+  engine_version       = var.engine_version
+  instance_type        = var.instance_type
+  instance_storage     = var.instance_storage
+  instance_charge_type = var.instance_charge_type
   instance_name        = "${var.name_prefix}-mysql"
-  vswitch_id          = var.vswitch_id
-  security_ips        = [var.vpc_cidr]
+  vswitch_id           = var.vswitch_ids[0]
+  security_ips         = var.security_ips
+
+  zone_id = var.vswitch_ids[0]
+
+  tags = var.tags
 }
 
-# Database parameters
+# https://registry.terraform.io/providers/aliyun/alicloud/latest/docs/resources/db_backup_policy
+resource "alicloud_db_backup_policy" "mysql_backup" {
+  instance_id = alicloud_db_instance.mysql.id
+
+  backup_retention_period = var.backup_retention_period
+  preferred_backup_time   = var.backup_time
+  preferred_backup_period = var.backup_period
+}
+
+# https://registry.terraform.io/providers/aliyun/alicloud/latest/docs/resources/db_instance_parameter
 resource "alicloud_db_instance_parameter" "mysql_params" {
   instance_id = alicloud_db_instance.mysql.id
   
@@ -25,45 +38,10 @@ resource "alicloud_db_instance_parameter" "mysql_params" {
   }
 }
 
-# Database account
-resource "alicloud_db_account" "mysql_account" {
-  instance_id  = alicloud_db_instance.mysql.id
-  account_name = var.db_account_name
-  password     = var.db_account_password
-  type         = "Super"
-}
-
-# OSS Bucket
-resource "alicloud_oss_bucket" "private_bucket" {
-  bucket = "${var.name_prefix}-private-bucket"
-  acl    = "private"
-  
-  versioning {
-    status = "Enabled"
-  }
-  
-  server_side_encryption_rule {
-    sse_algorithm = "AES256"
-  }
-  
-  lifecycle_rule {
-    enabled = true
-    prefix  = ""
-    
-    transition {
-      days          = 90
-      storage_class = "IA"
-    }
-    
-    transition {
-      days          = 180
-      storage_class = "Archive"
-    }
-    
-    expiration {
-      days = 365
-    }
-  }
-  
-  tags = var.tags
+# https://registry.terraform.io/providers/aliyun/alicloud/latest/docs/resources/rds_account
+resource "alicloud_rds_account" "mysql_account" {
+  db_instance_id  = alicloud_db_instance.mysql.id
+  account_name         = var.db_username
+  account_password     = var.db_password
+  account_type         = "Super"
 } 

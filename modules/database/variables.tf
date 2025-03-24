@@ -1,47 +1,76 @@
 variable "name_prefix" {
-  description = "Prefix to be used on all resources"
+  description = "Prefix to be used for resource names"
   type        = string
+  default     = "k8s"
 }
 
-variable "vpc_cidr" {
-  description = "The CIDR block of the VPC"
-  type        = string
+variable "vswitch_ids" {
+  description = "List of vswitch IDs for the database"
+  type        = list(string)
 }
 
-variable "vswitch_id" {
-  description = "The ID of the vswitch to place the RDS instance in"
+variable "engine_version" {
+  description = "MySQL engine version"
   type        = string
+  default     = "8.0"
 }
 
-variable "db_instance_type" {
-  description = "The instance type of the RDS instance"
+variable "instance_type" {
+  description = "RDS instance type"
   type        = string
   default     = "mysql.n2.small.2c"
 }
 
-variable "db_instance_storage" {
-  description = "The storage size in GB of the RDS instance"
+variable "instance_storage" {
+  description = "RDS instance storage in GB"
   type        = number
   default     = 20
 }
 
-variable "db_account_name" {
-  description = "The name of the database account"
+variable "security_ips" {
+  description = "List of IP addresses allowed to access the database"
+  type        = list(string)
+  default     = []
+}
+
+variable "db_username" {
+  description = "Database username"
   type        = string
   default     = "admin"
 }
 
-variable "db_account_password" {
-  description = "The password of the database account"
+variable "db_password" {
+  description = "Database password"
   type        = string
   sensitive   = true
 }
 
+variable "backup_retention_period" {
+  description = "Backup retention period in days"
+  type        = number
+  default     = 7
+}
+
+variable "backup_time" {
+  description = "Backup time in UTC"
+  type        = string
+  default     = "02:00Z-03:00Z"
+}
+
+variable "backup_period" {
+  description = "Backup period (e.g., Monday,Wednesday,Friday)"
+  type        = array(string)
+  default     = ["Monday", "Wednesday", "Friday"]
+}
+
+variable "instance_charge_type" {
+  description = "Instance charge type"
+  type        = string
+  default     = "Postpaid"
+}
+
 variable "tags" {
-  description = "A map of tags to add to all resources"
+  description = "Tags to be applied to all resources"
   type        = map(string)
-  default = {
-    Environment = "production"
-    Terraform   = "true"
-  }
+  default     = {}
 } 

@@ -1,14 +1,15 @@
 module "vpc" {
-  source = "./modules/vpc"
+  source = "../modules/vpc"
 
-  name_prefix   = var.name_prefix
-  vpc_name      = "${var.name_prefix}-vpc"
-  vpc_cidr      = var.vpc_cidr
-  nat_bandwidth = var.nat_bandwidth
+  name_prefix         = var.name_prefix
+  vpc_name            = "${var.name_prefix}-vpc"
+  vpc_cidr            = var.vpc_cidr
+  nat_bandwidth       = var.nat_bandwidth
+  availability_zones  = var.availability_zones
 }
 
 module "security" {
-  source = "./modules/security"
+  source = "../modules/security"
 
   name_prefix = var.name_prefix
   vpc_id     = module.vpc.vpc_id
@@ -16,20 +17,16 @@ module "security" {
 }
 
 module "database" {
-  source = "./modules/database"
+  source = "../modules/database"
 
-  name_prefix         = var.name_prefix
-  vpc_cidr           = module.vpc.vpc_cidr
-  vswitch_id         = module.vpc.private_vswitch_ids[0]
-  db_instance_type   = var.db_instance_type
-  db_instance_storage = var.db_instance_storage
-  db_account_name    = var.db_account_name
-  db_account_password = var.db_account_password
-  tags               = var.tags
+  name_prefix  = var.name_prefix
+  vswitch_ids  = module.vpc.private_vswitch_ids
+  db_password  = var.db_password
+  tags         = var.tags
 }
 
 module "kubernetes" {
-  source = "./modules/kubernetes"
+  source = "../modules/kubernetes"
 
   name_prefix        = var.name_prefix
   k8s_version       = var.k8s_version
