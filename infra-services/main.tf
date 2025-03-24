@@ -11,12 +11,19 @@ module "vpc" {
   tags                  = var.tags
 }
 
-module "security" {
-  source = "../modules/security"
+module "security_group" {
+  source = "../modules/security-group"
 
   name_prefix = var.name_prefix
   vpc_id      = module.vpc.vpc_id
   vpc_cidr    = module.vpc.vpc_cidr
+  tags        = var.tags
+}
+
+module "ram" {
+  source = "../modules/ram"
+
+  name_prefix = var.name_prefix
   tags        = var.tags
 }
 
@@ -46,7 +53,7 @@ module "kubernetes" {
   k8s_version        = var.k8s_version
   vswitch_ids        = module.vpc.private_vswitch_ids
   pod_vswitch_ids    = module.vpc.private_vswitch_ids
-  security_group_id  = module.security.security_group_id
+  security_group_id  = module.security_group.security_group_id
   
   # Worker node configuration
   worker_instance_type = var.worker_instance_type
