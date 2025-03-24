@@ -96,3 +96,18 @@ security_group_egress_rules = [
     cidr_ip           = "0.0.0.0/0"
   }
 ]
+
+# RAM Configuration
+ram_user_name = "k8s-admin"
+ram_user_display_name = "Kubernetes Administrator"
+ram_user_force = true
+ram_policies = [
+  {
+    policy_name = "AliyunContainerServiceFullAccess"
+    policy_type = "System"
+  },
+  {
+    policy_name = "AliyunECSFullAccess"
+    policy_type = "System"
+  }
+]

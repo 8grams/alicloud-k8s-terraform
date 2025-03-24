@@ -30,6 +30,11 @@ module "ram" {
 
   name_prefix = var.name_prefix
   tags        = var.tags
+  
+  ram_user_name        = var.ram_user_name
+  ram_user_display_name = var.ram_user_display_name
+  ram_user_force       = var.ram_user_force
+  ram_policies         = var.ram_policies
 }
 
 module "database" {
