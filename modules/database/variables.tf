@@ -64,7 +64,7 @@ variable "backup_time" {
 
 variable "backup_period" {
   description = "Backup period (e.g., Monday,Wednesday,Friday)"
-  type        = array(string)
+  type        = list(string)
   default     = ["Monday", "Wednesday", "Friday"]
 }
 
