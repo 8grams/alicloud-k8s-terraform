@@ -83,8 +83,8 @@ variable "db_backup_time" {
 
 variable "db_backup_period" {
   description = "Backup period (e.g., Monday,Wednesday,Friday)"
-  type        = string
-  default     = "Monday,Wednesday,Friday"
+  type        = list(string)
+  default     = ["Monday", "Wednesday", "Friday"]
 }
 
 variable "k8s_version" {
