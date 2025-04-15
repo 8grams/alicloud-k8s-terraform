@@ -1,0 +1,9 @@
+.terraform
+.terraform.tfstate.lock.info
+.terraform.tfstate
+terraform.tfstate
+terraform.tfstate.backup
+client.crt
+client.key
+cluster-ca.crt
+kubeconfig.yaml
